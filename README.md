@@ -1,1 +1,1 @@
-# javaproject
+# java project generator
