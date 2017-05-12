@@ -1,0 +1,59 @@
+package project_package.api;
+
+import project_package.common.project_nameCommonApplicationContext;
+import project_package.core.project_nameCoreApplicationContext;
+import project_package.domain.project_nameDomainApplicationContext;
+import project_package.query.project_nameQueryApplicationContext;
+import project_package.repository.project_nameRepositoryApplicationContext;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.MessageSource;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
+import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.support.ResourceBundleMessageSource;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
+import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
+
+@SpringBootApplication
+@EnableAspectJAutoProxy
+@EnableTransactionManagement
+@Import(value = {
+        project_nameCoreApplicationContext.class,
+        project_nameQueryApplicationContext.class,
+        project_nameRepositoryApplicationContext.class,
+        project_nameDomainApplicationContext.class,
+        project_nameCommonApplicationContext.class
+})
+@PropertySource(value = {
+        "classpath:lc_project_name-api-env.properties",
+        "classpath:lc_project_name-api-base.properties"
+})
+public class project_nameApiApplicationContext {
+    public static void main(String[] args) {
+        SpringApplication.run(project_nameApiApplicationContext.class, args);
+    }
+
+    @Bean
+    public ExceptionHandlerExceptionResolver exceptionHandlerExceptionResolver() {
+        ExceptionHandlerExceptionResolver exceptionHandlerExceptionResolver = new ExceptionHandlerExceptionResolver();
+        return exceptionHandlerExceptionResolver;
+    }
+
+    @Bean
+    public MessageSource messageSource() {
+        ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
+        messageSource.setBasename("messages");
+        return messageSource;
+    }
+
+    @Bean
+    public LocalValidatorFactoryBean validator() {
+        LocalValidatorFactoryBean bean = new LocalValidatorFactoryBean();
+        bean.setValidationMessageSource(messageSource());
+        return bean;
+    }
+
+}

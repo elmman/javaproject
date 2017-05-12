@@ -1,0 +1,35 @@
+package project_package.repository.datasource;
+
+import project_package.repository.config.DatabaseConfig;
+import com.zaxxer.hikari.HikariDataSource;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
+import org.springframework.context.annotation.Profile;
+
+import javax.sql.DataSource;
+
+/**
+ * @author elmman on 16/04/2017
+ */
+@Configuration
+@Profile(value = "default")
+public class MySQLDataSource {
+    @Autowired
+    private DatabaseConfig databaseConfig;
+
+    @Bean(destroyMethod = "close")
+    @Primary
+    public DataSource dataSource() throws Exception {
+        HikariDataSource dataSource = new HikariDataSource();
+        dataSource.setDriverClassName("com.mysql.jdbc.Driver");
+        dataSource.setJdbcUrl(databaseConfig.getJdbcUrl());
+        dataSource.setUsername(databaseConfig.getUsername());
+        dataSource.setPassword(databaseConfig.getPassword());
+        dataSource.setIdleTimeout(120000);
+        dataSource.setMinimumIdle(5);
+        dataSource.setMaximumPoolSize(10);
+        return dataSource;
+    }
+}

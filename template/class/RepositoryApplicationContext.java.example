@@ -1,0 +1,61 @@
+package project_package.repository;
+
+import project_package.common.project_nameCommonApplicationContext;
+import project_package.domain.project_nameDomainApplicationContext;
+import org.mybatis.spring.SqlSessionFactoryBean;
+import org.mybatis.spring.SqlSessionTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
+
+import javax.sql.DataSource;
+import java.util.Properties;
+
+@SpringBootApplication
+@Import(value = {
+        project_nameDomainApplicationContext.class,
+        project_nameCommonApplicationContext.class
+})
+@PropertySource(value = {
+        "classpath:lc_project_name-repository-env.properties",
+        "classpath:lc_project_name-repository-base.properties"
+})
+@EnableTransactionManagement
+public class project_nameRepositoryApplicationContext {
+    @Autowired
+    private DataSource dataSource;
+
+    @Bean
+    public PlatformTransactionManager transactionManager() throws Exception {
+        DataSourceTransactionManager dataSourceTransactionManager = new DataSourceTransactionManager();
+        dataSourceTransactionManager.setDataSource(dataSource);
+        return dataSourceTransactionManager;
+    }
+
+    @Bean
+    public SqlSessionFactoryBean sqlSessionFactoryBean() {
+        SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
+        sqlSessionFactoryBean.setDataSource(dataSource);
+        Properties properties = new Properties();
+        properties.setProperty("dialect", "mysql");
+        sqlSessionFactoryBean.setConfigurationProperties(properties);
+        return sqlSessionFactoryBean;
+    }
+
+    @Bean
+    public SqlSessionTemplate cargoSqlSessionTemplate(DataSource dataSource) throws Exception {
+        SqlSessionFactoryBean sqlSessionFactoryBean = sqlSessionFactoryBean();
+        sqlSessionFactoryBean.setDataSource(dataSource);
+        SqlSessionTemplate sqlSessionTemplate = new SqlSessionTemplate(sqlSessionFactoryBean.getObject()) {
+            @Override
+            public void close() {
+            }
+        };
+        return sqlSessionTemplate;
+    }
+}

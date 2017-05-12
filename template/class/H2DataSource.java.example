@@ -1,0 +1,28 @@
+package project_package.repository.datasource;
+
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
+import org.springframework.context.annotation.Profile;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
+
+import javax.sql.DataSource;
+
+/**
+ * @author elmman on 16/04/2017
+ */
+@Configuration
+@Profile(value = "test")
+public class H2DataSource {
+    @Bean(name = "project_databaseDataSource")
+    @Primary
+    public DataSource cargoDataSource() {
+        return new EmbeddedDatabaseBuilder()
+                .setType(EmbeddedDatabaseType.H2)
+                .setName("project_database")
+                .addScript("H2project_databaseSchema.sql")
+                .build();
+    }
+}
