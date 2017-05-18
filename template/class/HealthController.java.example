@@ -1,0 +1,20 @@
+package project_package.api.controller;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+/**
+ * @author elmman on 18/05/2017
+ */
+@Controller
+@RequestMapping(value = "/api/project_name/health")
+public class HealthController {
+
+    @ResponseBody
+    @RequestMapping(value = "check", method = RequestMethod.GET)
+    public String check() {
+        return "Hello World!";
+    }
+}

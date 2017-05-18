@@ -51,7 +51,6 @@
         <table tableName="test">
             <generatedKey column="id" sqlStatement="JDBC" identity="true"/>
             <columnOverride column="id" javaType="java.lang.Long"/>
-            <columnOverride column="context" javaType="java.lang.String"/>
         </table>
     </context>
 </generatorConfiguration>
